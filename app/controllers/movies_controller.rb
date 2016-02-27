@@ -11,8 +11,17 @@ class MoviesController < ApplicationController
   end
 
   def index
-    @movies = Movie.all
+    sort_category=params[:sort_by]
+    
+    # @movies = Movie.all
+    @movies=Movie.all.order(sort_category)
+    if params[:sort_by]=='title'
+      @title_tohilite='hilite'
+    elsif params[:sort_by]=='release_date'
+      @release_tohilite='hilite'
+    end
   end
+  
 
   def new
     # default: render 'new' template

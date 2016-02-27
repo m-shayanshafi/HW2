@@ -1,0 +1,19 @@
+<h2>Update the movie here</h2>
+
+
+= form_tag action:"updatermovie",method:"get" do 
+
+  = label :movie, :title, 'Title'
+  = text_field :movie, 'oldtitle'
+  
+  
+  = label :movie, :title, 'Name'
+  = text_field :movie, 'newtitle'
+  
+  = label :movie, :title, 'Rating'
+  = text_field :movie, 'rating'
+  
+  = label :movie, :title, 'Date'
+  = text_field :movie, 'release_date'
+ 
+  = submit_tag 'Update'

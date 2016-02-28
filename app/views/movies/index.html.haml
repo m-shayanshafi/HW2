@@ -2,12 +2,14 @@
 %h1 All Movies
 
 <center>
-= form_tag movies_path, :method => :get do
+= form_tag movies_path,:id => "ratings_form", :method => :get  do
   Include: 
   - Movie::ALL_RATINGS.each do |rating|
     = rating
-    = check_box_tag "ratings[#{rating}]","yes",(@ratings[rating]=="yes")
-  = submit_tag 'Refresh'
+    = check_box_tag "ratings[#{rating}]","yes",(@ratings[rating]=="yes"),:id => "ratings_#{rating}"
+    = hidden_field_tag "sort_by", params[:sort_by]
+  = submit_tag 'Refresh',:id => "ratings_submit"
+  
 </center>
 
 %table#movies

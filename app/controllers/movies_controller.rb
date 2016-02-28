@@ -1,5 +1,5 @@
 class MoviesController < ApplicationController
-  
+   @@initRatings = {'G'=>"yes", 'R'=>"yes", 'PG'=>"yes", 'PG-13'=>"yes",'NC-17'=>"yes"}
   def movie_params
     params.require(:movie).permit(:title, :rating, :description, :release_date)
   end
@@ -11,22 +11,21 @@ class MoviesController < ApplicationController
   end
 
   def index
-    @ratings = params[:ratings] || {'G' => 1, 'PG' => 1, 'PG-13' => 1, 'R' => 1, 'NC-17' => 1}
-    sort_category=params[:sort_by]
-    flash[:notice]="#{@ratings['G']}"
-    
-    # @movies = Movie.all
-    
     if params[:sort_by]=='title'
       @title_tohilite='hilite'
     elsif params[:sort_by]=='release_date'
       @release_tohilite='hilite'
     end
-     if sort_category.nil?
-        @movies = Movie.where(:rating => @ratings.keys).all
-      else
-        @movies = Movie.where(:rating => @ratings.keys).order(sort_category).all
-      end
+    sort_category=params[:sort_by]
+    
+    @ratings = params[:ratings] || session[:rating] 
+    if @ratings.nil?
+      @ratings=@@initRatings
+    else
+      session[:rating]=@ratings
+    end
+    @movies = Movie.where(:rating => @ratings.keys).order(sort_category).all
+
   end
   
 

@@ -1,3 +1,10 @@
+class Hash
+   def include_hash?(hash)
+     merge(hash) == self
+   end
+end
+
+
 class MoviesController < ApplicationController
    @@initRatings = {'G'=>"yes", 'R'=>"yes", 'PG'=>"yes", 'PG-13'=>"yes",'NC-17'=>"yes"}
   def movie_params
@@ -11,19 +18,37 @@ class MoviesController < ApplicationController
   end
 
   def index
-    if params[:sort_by]=='title'
-      @title_tohilite='hilite'
-    elsif params[:sort_by]=='release_date'
-      @release_tohilite='hilite'
-    end
-    sort_category=params[:sort_by]
     
-    @ratings = params[:ratings] || session[:rating] 
+    @ratings = params[:ratings] || session[:rating]
+    
+    if @@initRatings.include_hash?(@ratings)
+         session[:rating] = @ratings
+       else
+         @ratings = session[:rating]
+    end
+     
     if @ratings.nil?
       @ratings=@@initRatings
     else
       session[:rating]=@ratings
     end
+    sort_category=params[:sort_by]
+    
+    if (not(sort_category=="title" or sort_category=="release_date"))
+      sort_category=session[:sort_by]
+    else
+      session[:sort_by]=sort_category
+    end
+    
+      
+    if sort_category=='title'
+      @title_tohilite='hilite'
+    elsif sort_category=='release_date'
+      @release_tohilite='hilite'
+    end
+
+
+
     @movies = Movie.where(:rating => @ratings.keys).order(sort_category).all
 
   end
